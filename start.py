@@ -32,6 +32,8 @@ def scan_compartment(compartment):
                 parsed_result = json.loads(res)['data'];
                 for element in parsed_result:
                     element['region'] = region
+                    element['compartment'] = compartment['name']
+
 
                 result.append(parsed_result)
 
@@ -45,6 +47,8 @@ data = parsed_json['data']
 for compartment in data:
     if compartment['lifecycle-state'] != 'DELETED':
         scan_compartment(compartment)
+#        if len(result) > 0:
+#            break
 
 
 # Write result to file
@@ -56,7 +60,7 @@ for r in result:
 
 f.close()
 
-output = PrettyTable(['Name', 'Region', 'AD', 'State','Time Created', 'Shape'])
+output = PrettyTable(['Name', 'Region', 'Compartment', 'State','Time Created', 'Shape'])
 
 count = 0
 
@@ -64,7 +68,7 @@ for r in result:
     for e in r:
         name = ''
         region = ''
-        ad = ''
+        compartment = ''
         state = ''
         created = ''
         shape = ''
@@ -73,8 +77,8 @@ for r in result:
             name =      e['display-name']
         if 'region' in e:
             region =    e['region']
-        if 'availability-domain' in e:
-            ad =        e['availability-domain']
+        if 'compartment' in e:
+            compartment = e['compartment']
         if 'lifecycle-state' in e:
             state =     e['lifecycle-state']
         if 'time-created' in e:
@@ -82,12 +86,14 @@ for r in result:
         if 'shape' in e:
             shape =     e['shape']
 
-        new_item = (name,region,ad,state,created,shape)
+        new_item = (name,region,compartment,state,created,shape)
         output.add_row(new_item)
         count = count + 1
 
 
+#f = open('consumption.html','w')
 f = open('/SEAdmDisk/seadm/www/html/consumption.html','w')
+
 
 generateHtml.generateHtmlPrefix(f, count)
 generateHtml.generateHtmlTable(f, output)
