@@ -26,6 +26,7 @@ def generateHtmlPrefix(file, len):
     file.write('<h2>Current Consumption</h2>\n')
     file.write('\n')
     file.write('<h3>Total number of services: ' + str(len) + ' </h3>\n')
+    file.write('<h3>Last executed at: ' + str(now) + ' </h3>\n')
 
 
 def generateHtmlTable(file, output):

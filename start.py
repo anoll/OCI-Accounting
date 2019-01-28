@@ -45,8 +45,6 @@ data = parsed_json['data']
 for compartment in data:
     if compartment['lifecycle-state'] != 'DELETED':
         scan_compartment(compartment)
-        if len(result) > 0:
-            break
 
 
 # Write result to file
@@ -89,7 +87,7 @@ for r in result:
         count = count + 1
 
 
-f = open('consumption.html','w')
+f = open('/SEAdmDisk/seadm/www/html/consumption.html','w')
 
 generateHtml.generateHtmlPrefix(f, count)
 generateHtml.generateHtmlTable(f, output)
