@@ -1,11 +1,27 @@
 import os
 import json
 import generateHtml
-from prettytable import PrettyTable
 
 
-regions = ['eu-frankfurt-1', 'uk-london-1', 'us-ashburn-1', 'us-phoenix-1', 'ca-toronto-1']
-#regions = ['eu-frankfurt-1']
+class ResourceEntry:
+    def __init__(self, type, region, compartment, name, state, time_created, shape):
+        self.type = type
+        self.region = region
+        self.compartment = compartment
+        self.name = name
+        self.state = state
+        self.time_created = time_created
+        self.shape = shape
+
+
+class ResourceTable:
+    def __init__(self, header):
+        self.header = header
+        self.entries = []
+
+
+#regions = ['eu-frankfurt-1', 'uk-london-1', 'us-ashburn-1', 'us-phoenix-1', 'ca-toronto-1']
+regions = ['eu-frankfurt-1']
 query_commands = ['compute instance',
                   'db autonomous-data-warehouse',
                   'db autonomous-database',
@@ -13,7 +29,7 @@ query_commands = ['compute instance',
                   ]
 result = []
 
-output = {}
+resourceTable = ResourceTable(ResourceEntry('Type,','Region','Compartment','Name','State','Time Created', 'Shape'))
 
 def add_result(compartment, cmd, res):
     #No result, returning immediately
@@ -31,8 +47,9 @@ def scan_compartment(compartment):
             if res != '':
                 parsed_result = json.loads(res)['data'];
                 for element in parsed_result:
-                    element['region'] = region
+                    element['region']      = region
                     element['compartment'] = compartment['name']
+                    element['type']        = query_command
 
 
                 result.append(parsed_result)
@@ -47,25 +64,14 @@ data = parsed_json['data']
 for compartment in data:
     if compartment['lifecycle-state'] != 'DELETED':
         scan_compartment(compartment)
-#        if len(result) > 0:
-#            break
+        if len(result) > 0:
+            break
 
 
-# Write result to file
-f = open('interim_result.txt','w')
-
-for r in result:
-    f.write(str(r) + '\n')
-
-
-f.close()
-
-output = PrettyTable(['Name', 'Region', 'Compartment', 'State','Time Created', 'Shape'])
-
-count = 0
 
 for r in result:
     for e in r:
+        type = ''
         name = ''
         region = ''
         compartment = ''
@@ -73,6 +79,8 @@ for r in result:
         created = ''
         shape = ''
 
+        if 'type' in e:
+            type = e['type']
         if 'display-name' in e:
             name =      e['display-name']
         if 'region' in e:
@@ -86,16 +94,13 @@ for r in result:
         if 'shape' in e:
             shape =     e['shape']
 
-        new_item = (name,region,compartment,state,created,shape)
-        output.add_row(new_item)
-        count = count + 1
+        resourceTable.entries.append(ResourceEntry(type,region,compartment,name,state,created,shape))
 
 
-#f = open('consumption.html','w')
-f = open('/SEAdmDisk/seadm/www/html/consumption.html','w')
+if os.path.isfile('consumption.html'):
+    os.remove("consumption.html")
 
+f = open('consumption-source.html','r')
 
-generateHtml.generateHtmlPrefix(f, count)
-generateHtml.generateHtmlTable(f, output)
-generateHtml.generateHtmlSuffix(f)
+generateHtml.generateHtmlTable(f, resourceTable)
 f.close()
