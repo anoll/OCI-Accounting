@@ -20,8 +20,8 @@ class ResourceTable:
         self.entries = []
 
 
-#regions = ['eu-frankfurt-1', 'uk-london-1', 'us-ashburn-1', 'us-phoenix-1', 'ca-toronto-1']
-regions = ['eu-frankfurt-1']
+regions = ['eu-frankfurt-1', 'uk-london-1', 'us-ashburn-1', 'us-phoenix-1', 'ca-toronto-1']
+#regions = ['eu-frankfurt-1']
 query_commands = ['compute instance',
                   'db autonomous-data-warehouse',
                   'db autonomous-database',
@@ -64,8 +64,8 @@ data = parsed_json['data']
 for compartment in data:
     if compartment['lifecycle-state'] != 'DELETED':
         scan_compartment(compartment)
-        if len(result) > 0:
-            break
+ #       if len(result) > 0:
+ #           break
 
 
 
