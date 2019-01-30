@@ -1,6 +1,7 @@
 import os
 import json
 import generateHtml
+import sys
 
 
 class ResourceEntry:
@@ -96,11 +97,11 @@ for r in result:
 
         resourceTable.entries.append(ResourceEntry(type,region,compartment,name,state,created,shape))
 
+full_file_path= sys.argv[1] + '/consumption.html'
+if os.path.isfile(full_file_path):
+    os.remove(full_file_path)
 
-if os.path.isfile('consumption.html'):
-    os.remove("consumption.html")
+html_template = open('consumption-source.html', 'r')
 
-f = open('consumption-source.html','r')
-
-generateHtml.generateHtmlTable(f, resourceTable)
-f.close()
+generateHtml.generateHtmlTable(html_template, full_file_path, resourceTable)
+html_template.close()

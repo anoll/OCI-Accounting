@@ -27,9 +27,9 @@ def generateTable(htmlFile, resource_table, tableID, function_name):
 
 
 
-def generateHtmlTable(file, resource_table):
+def generateHtmlTable(file, full_file_path, resource_table):
     lines = file.read().split('\n')
-    htmlFile = open('consumption.html','w')
+    htmlFile = open(full_file_path,'w')
 
     for line in lines:
         htmlFile.write(line + '\n')
