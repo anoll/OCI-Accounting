@@ -2,10 +2,10 @@ import os
 import json
 import generateHtml
 import sys
-
+'Compartment','Region','Type','Shape','Name','State','Time Created'
 
 class ResourceEntry:
-    def __init__(self, type, region, compartment, name, state, time_created, shape):
+    def __init__(self, compartment, region, type, shape, name, state, time_created):
         self.type = type
         self.region = region
         self.compartment = compartment
@@ -30,7 +30,7 @@ query_commands = ['compute instance',
                   ]
 result = []
 
-resourceTable = ResourceTable(ResourceEntry('Type,','Region','Compartment','Name','State','Time Created', 'Shape'))
+resourceTable = ResourceTable(ResourceEntry('Compartment','Region','Type','Shape','Name','State','Time Created'))
 
 def add_result(compartment, cmd, res):
     #No result, returning immediately
@@ -82,6 +82,11 @@ for r in result:
 
         if 'type' in e:
             type = e['type']
+            if (type == 'db autonomous-data-warehouse') or type == 'db autonomous-database':
+                cpu_count = e['cpu-core-count']
+                memory_tb = e['data-storage-size-in-tbs']
+                shape = '#cpu: ' + str(cpu_count) + ', size: ' + str(memory_tb) + '[TB]'
+
         if 'display-name' in e:
             name =      e['display-name']
         if 'region' in e:
@@ -92,10 +97,11 @@ for r in result:
             state =     e['lifecycle-state']
         if 'time-created' in e:
             created =   e['time-created']
+            created = created[:10] # yyyy-mm-dd
         if 'shape' in e:
             shape =     e['shape']
 
-        resourceTable.entries.append(ResourceEntry(type,region,compartment,name,state,created,shape))
+        resourceTable.entries.append(ResourceEntry(compartment, region, type, shape, name, state, created))
 
 full_file_path= sys.argv[1] + '/consumption.html'
 if os.path.isfile(full_file_path):

@@ -4,24 +4,27 @@ def generateTableHeader(htmlFile, resource_table, function_name, tableID):
     htmlFile.write('<table id=\"'+tableID+'\">\n')
     htmlFile.write('  <tr>\n')
     table_header = resource_table.header
-    htmlFile.write('    <th onclick=\"'+function_name+'(' + str(0) + ')\">' + table_header.type + '</th>\n')
+
+    htmlFile.write('    <th onclick=\"'+function_name+'(' + str(0) + ')\">' + table_header.compartment + '</th>\n')
     htmlFile.write('    <th onclick=\"'+function_name+'(' + str(1) + ')\">' + table_header.region + '</th>\n')
-    htmlFile.write('    <th onclick=\"'+function_name+'(' + str(2) + ')\">' + table_header.compartment + '</th>\n')
-    htmlFile.write('    <th onclick=\"'+function_name+'(' + str(3) + ')\">' + table_header.state + '</th>\n')
-    htmlFile.write('    <th onclick=\"'+function_name+'(' + str(4) + ')\">' + table_header.time_created + '</th>\n')
-    htmlFile.write('    <th onclick=\"'+function_name+'(' + str(5) + ')\">' + table_header.shape + '</th>\n')
+    htmlFile.write('    <th onclick=\"'+function_name+'(' + str(2) + ')\">' + table_header.type + '</th>\n')
+    htmlFile.write('    <th onclick=\"'+function_name+'(' + str(3) + ')\">' + table_header.shape + '</th>\n')
+    htmlFile.write('    <th onclick=\"'+function_name+'(' + str(4) + ')\">' + table_header.name + '</th>\n')
+    htmlFile.write('    <th onclick=\"'+function_name+'(' + str(5) + ')\">' + table_header.state + '</th>\n')
+    htmlFile.write('    <th onclick=\"'+function_name+'(' + str(5) + ')\">' + table_header.time_created + '</th>\n')
     htmlFile.write('  </tr>\n')
 
 def generateTable(htmlFile, resource_table, tableID, function_name):
     generateTableHeader(htmlFile, resource_table, function_name, tableID)
     for entry in resource_table.entries:
         htmlFile.write('  <tr>\n')
-        htmlFile.write('    <td>' + entry.type + '</td>\n')
-        htmlFile.write('    <td>' + entry.region + '</td>\n')
         htmlFile.write('    <td>' + entry.compartment + '</td>\n')
+        htmlFile.write('    <td>' + entry.region + '</td>\n')
+        htmlFile.write('    <td>' + entry.type + '</td>\n')
+        htmlFile.write('    <td>' + entry.shape + '</td>\n')
+        htmlFile.write('    <td>' + entry.name + '</td>\n')
         htmlFile.write('    <td>' + entry.state + '</td>\n')
         htmlFile.write('    <td>' + entry.time_created + '</td>\n')
-        htmlFile.write('    <td>' + entry.shape + '</td>\n')
         htmlFile.write('  </tr>\n')
     htmlFile.write('</table>\n')
 
