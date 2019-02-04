@@ -2,7 +2,6 @@ import os
 import json
 import generateHtml
 import sys
-'Compartment','Region','Type','Shape','Name','State','Time Created'
 
 class ResourceEntry:
     def __init__(self, compartment, region, type, shape, name, state, time_created):
