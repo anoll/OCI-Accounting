@@ -38,7 +38,7 @@ def generateHtmlTable(file, full_file_path, resource_table):
         htmlFile.write(line + '\n')
         if '<!-- insert table here -->' in line:
             htmlFile.write('<h3>Total number of services: ' + str(len(resource_table.entries)) + ' </h3>\n')
-            htmlFile.write('<h3>Last executed at: ' + str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())) + ' </h3>\n')
+            htmlFile.write('<h3 id=\"time_last_executed\">Last executed at: ' + str(time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())) + ' </h3>\n')
             generateTable(htmlFile, resource_table, 'myTable', 'sortTable')
 
     htmlFile.close()
